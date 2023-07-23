@@ -1,0 +1,6 @@
+#include <pthread.h>
+
+/* PKA_thread function declaration */
+
+void* PKA_thread(void* arg);
+

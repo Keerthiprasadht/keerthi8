@@ -1,0 +1,8 @@
+#include <pthread.h>
+
+
+
+/* KPP_thread function declaration */
+
+void* KPP_thread(void* arg);
+

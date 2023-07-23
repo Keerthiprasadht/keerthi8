@@ -1,0 +1,92 @@
+#include "kpp.h"
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+#include <pthread.h>
+
+
+
+/* Initializing mutex variable */
+
+extern pthread_mutex_t mutex;
+
+
+
+/* File pointers for input.log file and kpp_out.log */
+
+extern FILE* input_file;
+
+extern FILE* output_file2;
+
+
+
+/* KPP_thread function definition */
+
+void* KPP_thread(void* arg) {
+
+    /* Calling the lock function to lock this thread */
+
+    pthread_mutex_lock(&mutex);
+
+
+
+    /* Opening an input file input.log in read condition */
+
+    input_file = fopen("input.log", "r");
+
+
+
+    /* Creating file in append mode */
+
+    output_file2 = fopen("kpp_out.log", "a");
+
+
+
+    if (input_file == NULL || output_file2 == NULL) {
+
+        printf("Thread 2: Failed to open file.\n");
+
+        return NULL;
+
+    }
+
+
+
+    char line[256];
+
+    /* Loop that reads lines from the input_file using fgets function 
+
+    reads a line from input_file and stores it in the line array */
+
+    while (fgets(line, sizeof(line), input_file) != NULL) {
+
+        /* strstr function is used to find the first occurrence of the "KPP00 [" substring in the line */
+
+        if (strstr(line, "KPP00 [") != NULL) {
+
+            /* If "KPP00 [" string matches, then write that line to output_file2 */
+
+            fprintf(output_file2, "%s", line);
+
+        }
+
+    }
+
+
+
+    fclose(input_file);
+
+    fclose(output_file2);
+
+    /* Release the lock by calling the unlock function */
+
+    pthread_mutex_unlock(&mutex);
+
+    return NULL;
+
+}
+

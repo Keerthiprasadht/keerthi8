@@ -1,0 +1,92 @@
+#include "kpl.h"
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <string.h>
+
+#include <pthread.h>
+
+
+
+/* Initializing mutex variable */
+
+extern pthread_mutex_t mutex;
+
+
+
+/* File pointers for input.log file and pka_out.log */
+
+extern FILE* input_file;
+
+extern FILE* output_file1;
+
+
+
+/* PKA_thread function definition */
+
+void* PKA_thread(void* arg) {
+
+    /* Calling the lock function to lock the thread */
+
+    pthread_mutex_lock(&mutex);
+
+
+
+    /* Opening an input file input.log in read condition */
+
+    input_file = fopen("input.log", "r");
+
+
+
+    /* Creating file in append mode */
+
+    output_file1 = fopen("kpl_out.log", "a");
+
+
+
+    if (input_file == NULL || output_file1 == NULL) {
+
+        printf("Thread 1: Failed to open file.\n");
+
+        return NULL;
+
+    }
+
+
+
+    char line[1024];
+
+    /* Loop that reads lines from the input_file using fgets function 
+
+    reads a line from input_file and stores it in the line array */
+
+    while (fgets(line, sizeof(line), input_file) != NULL) {
+
+        /* strstr function is used to find the first occurrence of the "PKA > [" substring in the line */
+
+        if (strstr(line, "PKA > [") != NULL) {
+
+            /* If "PKA > [" string matches, then write that line to output_file1 */
+
+            fprintf(output_file1, "%s", line);
+
+        }
+
+    }
+
+
+
+    fclose(input_file);
+
+    fclose(output_file1);
+
+    /* Release the lock by calling the unlock function */
+
+    pthread_mutex_unlock(&mutex);
+
+    return NULL;
+
+}
+

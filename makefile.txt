@@ -1,0 +1,42 @@
+CC = gcc
+
+CFLAGS = -Wall -Wextra
+
+
+
+# List all your source files (C files) here
+
+SOURCES = main.c kpl.c kpp.c
+
+
+
+# List all your header files here
+
+HEADERS = kpl.h kpp.h
+
+
+
+# Name of the final executable
+
+TARGET = keerthi
+
+
+
+all: $(TARGET)
+
+
+
+$(TARGET): $(SOURCES) $(HEADERS)
+
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES)
+
+
+
+clean:
+
+	rm -f $(TARGET)
+
+
+
+.PHONY: all clean
+
